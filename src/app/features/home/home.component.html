@@ -1,0 +1,23 @@
+<div class="bg-slate-950 min-h-screen p-6">
+  
+  @if (isLoading()) {
+    <div class="flex justify-center items-center py-20">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  }
+
+  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+    @for (item of movies(); track item.id) {
+      <app-movie-card [movie]="item" />
+    } 
+    
+    @empty {
+      @if (!isLoading()) {
+        <div class="col-span-full text-center py-20 text-gray-500">
+          <p class="text-xl">No movies found. Try searching for something else!</p>
+        </div>
+      }
+    }
+  </div>
+
+</div>

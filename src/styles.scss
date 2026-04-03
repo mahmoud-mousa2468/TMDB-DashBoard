@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// اختياري: إضافة خلفية غامقة للموقع كله عشان يليق بموقع أفلام
+body {
+  @apply bg-slate-950 text-white;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}

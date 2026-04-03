@@ -1,0 +1,63 @@
+<nav
+  class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-md"
+>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
+        <div
+          class="h-8 w-8 rounded bg-blue-600 flex items-center justify-center font-bold text-white"
+        >
+          T
+        </div>
+        <span class="text-xl font-bold tracking-tight text-white"
+          >TMDB <span class="text-blue-500">Dash</span></span
+        >
+      </div>
+
+      <div class="hidden md:block flex-1 max-w-md mx-8">
+        <div class="relative">
+          <input
+            type="text"
+            (input)="onSearch($event)"
+            placeholder="Search movies..."
+            class="w-full rounded-full bg-slate-900 border border-white/10 py-2 pl-10 pr-4 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
+          />
+          <div class="absolute left-3 top-2.5 text-gray-400">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-4 h-4"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a
+          routerLink="/movies"
+          class="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+          >Movies</a
+        >
+        <a
+          routerLink="/watchlist"
+          class="relative text-sm font-medium text-gray-300 hover:text-white transition-colors"
+        >
+          Watchlist
+          <span
+            class="absolute -top-1 -right-3 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white"
+            >0</span
+          >
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
