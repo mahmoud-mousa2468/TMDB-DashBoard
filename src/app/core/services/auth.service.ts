@@ -11,7 +11,7 @@ import {
 } from '@angular/fire/auth';
 import { doc, docData, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { of, switchMap, take } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
