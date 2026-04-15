@@ -1,8 +1,9 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { FavouriteService } from '../../core/services/favourite.service';
 import { AdminService } from '../../core/services/admin.service';
 import { take } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,18 +19,18 @@ export class DashboardComponent {
   // بنعرف السجنالز هنا جوه الكومبوننت
   users = signal<any[]>([]);
   isLoading = signal(true);
-
+private platformId = inject(PLATFORM_ID);
   ngOnInit() {
     // بنجيب الداتا "مرة واحدة" أول ما يفتح الداشبورد
+    if (isPlatformBrowser(this.platformId)) {
     this.adminService.getAllUsers().pipe(take(1)).subscribe({
       next: (data) => {
         this.users.set(data);
-        
         this.isLoading.set(false);
       },
       error: () => this.isLoading.set(false)
     });
-  }
+  }}
   userCount = computed(() => this.users().length);
   /**
    * تغيير دور المستخدم (Admin/User)

@@ -1,8 +1,10 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Firestore, collection, collectionData, doc, deleteDoc, updateDoc, docData, setDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { async, Observable, of } from 'rxjs';
 import { FavouriteService } from './favourite.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { isPlatformBrowser } from '@angular/common';
+import { deleteUser } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +12,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class AdminService {
   private firestore = inject(Firestore);
   private favService = inject(FavouriteService);
-  // // 1. عدد المستخدمين (بنحول الـ Observable بتاع اليوزرز لسجنال)
-  // allUsers = toSignal(this.getAllUsers(), { initialValue: [] });
-  
-  // // 2. إحصائيات محسوبة (Computed Signals)
-  // activeUsersCount = computed(() => this.allUsers().length);
+private platformId = inject(PLATFORM_ID);
   
   totalInteractions = computed(() => this.favService.favSignal().length);
   
@@ -71,7 +69,14 @@ export class AdminService {
   }
   // --- إدارة المستخدمين ---
   getAllUsers(): Observable<any[]> {
-    return collectionData(collection(this.firestore, 'users'), { idField: 'uid' });
+// 2. التشيك قبل أي تعامل مع Firestore
+    if (isPlatformBrowser(this.platformId)) {
+      const usersCollection = collection(this.firestore, 'users');
+      return collectionData(usersCollection, { idField: 'uid' });
+    }
+
+    // 3. لو إحنا على السيرفر (وقت الـ Build)، بنرجع مصفوفة فاضية عشان الـ Build يكمل بسلام
+    return of([]);
   }
 
   async deleteUser(uid: string) {
