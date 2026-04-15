@@ -1,1 +1,153 @@
-<p>movie-details works!</p>
+@if (isLoading()) {
+  <div class="flex h-screen items-center justify-center bg-[#1d1d1d]">
+    <div
+      class="h-12 w-12 animate-spin rounded-full border-t-2 border-blue-500"
+    ></div>
+  </div>
+} @else if (movie()) {
+  <div class="relative min-h-screen bg-[#1d1d1d] text-white overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img
+        [src]="'https://image.tmdb.org/t/p/original' + movie().backdrop_path"
+        class="h-full w-full object-cover opacity-30 blur-2xl scale-110"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-[#1d1d1d]/60 via-[#1d1d1d] to-[#1d1d1d]"
+      ></div>
+    </div>
+
+    <div class="relative z-10 mx-auto max-w-5xl px-6 py-12 md:py-24">
+      <div class="flex flex-col md:flex-row gap-10 items-start">
+        <div class="w-full md:w-72 shrink-0 mx-auto">
+          <div
+            class="rounded-lg border-[6px] border-white shadow-2xl overflow-hidden"
+          >
+            <img
+              [src]="movie().poster_path ? 'https://image.tmdb.org/t/p/w500' + movie().poster_path : 'assets/no-poster.png'"
+              class="w-full h-auto block"
+              [alt]="movie().title"
+            />
+          </div>
+          <button
+            [disabled]="!trailerUrl()"
+            (click)="showModal.set(true)"
+            class="mt-6 w-full flex items-center justify-center gap-2 rounded bg-blue-500 py-3 font-black text-slate-900 disabled:bg-gray-600 hover:bg-blue-400 transition-all shadow-lg uppercase tracking-tighter"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+              />
+            </svg>
+            {{ trailerUrl() ? "Watch Trailer" : "No Trailer Available" }}
+          </button>
+        </div>
+
+        <div class="flex-1">
+          <h1
+            class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none"
+          >
+            {{ movie().title }}
+          </h1>
+
+          <div
+            class="mt-6 flex flex-wrap items-center gap-4 text-xl font-bold text-gray-300"
+          >
+            <span>{{ movie().release_date | date: "yyyy" }}</span>
+            <div class="flex items-center gap-1 text-blue-500">
+              <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                />
+              </svg>
+              <span>{{ movie().vote_average | number: "1.1-1" }}</span>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            @for (genre of movie().genres; track genre.id) {
+              <span
+                class="text-[#919191] text-lg font-medium hover:text-white cursor-default"
+              >
+                {{ genre.name }}{{ !$last ? " / " : "" }}
+              </span>
+            }
+          </div>
+
+          <div class="mt-10">
+            <h2
+              class="text-2xl font-black uppercase tracking-tight mb-3 border-b border-white/10 pb-2"
+            >
+              Plot Summary
+            </h2>
+            <p class="text-gray-400 leading-relaxed text-lg font-medium">
+              {{ movie().overview }}
+            </p>
+          </div>
+          <div class="mt-12">
+          <h2
+            class="text-2xl font-black uppercase tracking-tight mb-6 border-b border-white/10 pb-2 text-blue-500"
+          >
+            Top Cast
+          </h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6">
+            @for (actor of movie().credits.cast.slice(0, 5); track actor.id) {
+              <div class="group text-center">
+                <div
+                  class="aspect-square overflow-hidden rounded-full border-2 border-white/10 group-hover:border-blue-500 transition-all mb-3"
+                >
+                  <img
+                    [src]="
+                      actor.profile_path
+                        ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path
+                        : 'assets/no-avatar.png'
+                    "
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                  />
+                </div>
+                <h3 class="font-bold text-sm truncate">{{ actor.name }}</h3>
+                <p class="text-xs text-gray-500 truncate">
+                  as {{ actor.character }}
+                </p>
+              </div>
+            }
+          </div>
+        </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+}
+
+@if (showModal() && trailerUrl()) {
+  <div
+    class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+  >
+    <div
+      class="relative w-full max-w-4xl aspect-video bg-black rounded-lg overflow-hidden shadow-2xl"
+    >
+      <button
+        (click)="showModal.set(false)"
+        class="absolute top-4 right-4 z-10 text-white hover:text-blue-500 transition-colors"
+      >
+        <svg
+          class="w-8 h-8"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <iframe
+        [src]="trailerUrl()"
+        class="w-full h-full"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+      >
+      </iframe>
+    </div>
+  </div>
+}

@@ -8,7 +8,7 @@ export interface Movie {
   release_date: string;
 }
 
-export interface TmdbResponse {
+export interface ITmdbResponse {
   page: number;
   results: Movie[];
   total_pages: number;

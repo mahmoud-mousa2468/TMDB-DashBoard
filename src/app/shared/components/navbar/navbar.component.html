@@ -1,63 +1,103 @@
-<nav
-  class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-md"
->
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="flex h-16 items-center justify-between">
-      <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
-        <div
-          class="h-8 w-8 rounded bg-blue-600 flex items-center justify-center font-bold text-white"
-        >
-          T
-        </div>
-        <span class="text-xl font-bold tracking-tight text-white"
-          >TMDB <span class="text-blue-500">Dash</span></span
-        >
+<nav class="bg-[#171717] border-b border-white/5 py-2 px-4 sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
+    <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
+      <div
+        class="h-8 w-8 rounded bg-blue-600 flex items-center justify-center font-bold text-white text-sm"
+      >
+        T
       </div>
+      <span class="xs:block text-lg font-bold text-white">TMDB</span>
+      <div class="font-bold text-blue-600 text-lg">Dash</div>
+    </div>
 
-      <div class="hidden md:block flex-1 max-w-md mx-8">
-        <div class="relative">
-          <input
-            type="text"
-            (input)="onSearch($event)"
-            placeholder="Search movies..."
-            class="w-full rounded-full bg-slate-900 border border-white/10 py-2 pl-10 pr-4 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
+    <div class="relative flex-1 max-w-lg group">
+      <input
+        type="text"
+        (input)="onSearch($event)"
+        placeholder="Quick Search"
+        class="w-full bg-[#1d1d1d] border border-[#333] rounded-full py-1.5 px-10 text-sm focus:outline-none focus:border-blue-600 transition-all"
+      />
+      <svg
+        class="absolute left-3 top-2 w-4 h-4 text-[#555] group-focus-within:text-blue-600"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+        />
+      </svg>
+    </div>
+
+    <div
+      class="hidden sm:flex items-center gap-6 text-sm font-bold text-[#919191]"
+    >
+      <a
+        routerLink="/home"
+        routerLinkActive="var(--TMDB-main)"
+        class="hover:text-white transition-colors cursor-pointer"
+        >Home</a
+      >
+      <a
+        routerLink="/browse"
+        routerLinkActive="var(--TMDB-main)"
+        class="hover:text-white transition-colors cursor-pointer"
+        >Browse</a
+      >
+      @if (authService.currentUser()?.role === 'admin') {
+    <a routerLink="/dashboard" 
+       class="bg-red-600 text-white px-4 py-2 rounded-lg font-black uppercase text-[10px] tracking-widest hover:bg-red-700 transition-all shadow-lg shadow-red-600/20">
+       🛡️ Admin Dashboard
+    </a>
+    <div class="flex items-center gap-3 ml-4 border-l border-white/10 pl-4">
+          <img
+            [src]="
+              authService.currentUser()?.photoURL || 'assets/default-avatar.png'
+            "
+            class="w-8 h-8 rounded-full border border-blue-500"
           />
-          <div class="absolute left-3 top-2.5 text-gray-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-4 h-4"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-6">
-        <a
-          routerLink="/movies"
-          class="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-          >Movies</a
-        >
-        <a
-          routerLink="/watchlist"
-          class="relative text-sm font-medium text-gray-300 hover:text-white transition-colors"
-        >
-          Watchlist
-          <span
-            class="absolute -top-1 -right-3 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white"
-            >0</span
+          <button
+            (click)="authService.logout()"
+            class="text-xs uppercase font-black hover:text-red-500 transition"
           >
-        </a>
-      </div>
+            Logout
+          </button>
+        </div>
+  }@else if (authService.currentUser()) {
+        <span class="text-xs font-mono text-gray-400">
+       Hi, {{ authService.currentUser()?.displayName }}
+     </span>
+        <a routerLink="/favourite" class="hover:text-blue-500 transition"
+          >Favourite</a
+        >
+
+        <div class="flex items-center gap-3 ml-4 border-l border-white/10 pl-4">
+          <img
+            [src]="
+              authService.currentUser()?.photoURL || 'assets/default-avatar.png'
+            "
+            class="w-8 h-8 rounded-full border border-blue-500"
+          />
+          <button
+            (click)="authService.logout()"
+            class="text-xs uppercase font-black hover:text-red-500 transition"
+          >
+            Logout
+          </button>
+        </div>
+      } @else {
+        <div class="flex items-center gap-4">
+          <a routerLink="/login" class="text-sm font-bold hover:text-blue-500"
+            >Login</a
+          >
+          <a
+            routerLink="/register"
+            class="bg-blue-500 text-black px-4 py-2 rounded-lg text-sm font-black uppercase hover:bg-blue-400 transition"
+          >
+            Register
+          </a>
+        </div>
+      }
     </div>
   </div>
 </nav>

@@ -1,23 +1,70 @@
-<div class="bg-slate-950 min-h-screen p-6">
-  
-  @if (isLoading()) {
-    <div class="flex justify-center items-center py-20">
-      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+@if (bannerData && bannerData.isActive) {
+    <div class="bg-red-600 text-white py-3 px-4 text-center font-black uppercase text-[11px] tracking-[0.2em] shadow-2xl sticky top-0 z-[1000] animate-pulse">
+      <span class="mr-2">📢</span> {{ bannerData.message }}
     </div>
   }
-
-  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-    @for (item of movies(); track item.id) {
-      <app-movie-card [movie]="item" />
-    } 
+ 
+@if (featuredMovie) {
+  <div class="relative h-[60vh] w-full overflow-hidden flex items-center shadow-2xl">
+    <img [src]="'https://image.tmdb.org/t/p/original' + featuredMovie.backdrop_path" 
+         class="absolute inset-0 w-full h-full object-cover" [alt]="featuredMovie.title">
     
-    @empty {
-      @if (!isLoading()) {
-        <div class="col-span-full text-center py-20 text-gray-500">
-          <p class="text-xl">No movies found. Try searching for something else!</p>
-        </div>
-      }
-    }
-  </div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/60 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#141414] to-transparent"></div>
 
+    <div class="relative z-10 max-w-3xl px-10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">featuredMovie</span>
+        <span class="text-xs text-gray-300 font-bold italic">Top Choice by Admin</span>
+      </div>
+      <h2 class="text-5xl md:text-7xl font-black mb-4 uppercase italic tracking-tighter leading-none">
+        {{ featuredMovie.title }}
+      </h2>
+      <p class="text-gray-300 text-sm md:text-base line-clamp-3 mb-8 max-w-xl">
+        {{ featuredMovie.overview }}
+      </p>
+      <div class="flex gap-4">
+        <button [routerLink]="['/movie', featuredMovie.id]" 
+                class="bg-white text-black px-8 py-3 rounded-full font-black uppercase text-xs hover:bg-red-600 hover:text-white transition-all transform hover:scale-105">
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<div class="py-12 text-center border-b border-white/5 bg-gradient-to-b from-[#171717] to-transparent">
+  <h1 class="text-4xl font-bold mb-4">Download TMDB YIFY movies: HD smallest size</h1>
+  <p class="text-[#919191] text-sm max-w-2xl mx-auto px-4">
+    Welcome to our official TMDB. Browse and download YIFY movies in excellent 720p, 1080p, 2160p 4K and 3D quality.
+  </p>
+</div>
+
+<div class="max-w-6xl mx-auto p-6 mt-10">
+  <h2 class="text-xl font-black uppercase mb-8 border-l-4 border-red-600 pl-4 tracking-widest">
+    Recent Uploads
+  </h2>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+     @for (movie of movies(); track movie.id) {
+        <app-movie-card [movie]="movie" class="hover:scale-105 transition-transform duration-300" />
+     }
+  </div>
+</div>
+
+<div class="mt-12 flex justify-center items-center gap-2 pb-10 font-black">
+  <button (click)="changePage(currentPage() - 1)" 
+          [disabled]="currentPage() === 1"
+          class="px-6 py-2 bg-white/5 border border-white/10 rounded-full hover:bg-red-600 hover:text-white transition-all disabled:opacity-30 uppercase text-[10px]">
+    Prev
+  </button>
+
+  <span class="px-6 py-2 text-red-600 border-b-2 border-red-600 text-sm">
+    {{ currentPage() }}
+  </span>
+
+  <button (click)="changePage(currentPage() + 1)"
+          class="px-6 py-2 bg-white/5 border border-white/10 rounded-full hover:bg-red-600 hover:text-white transition-all uppercase text-[10px]">
+    Next
+  </button>
 </div>

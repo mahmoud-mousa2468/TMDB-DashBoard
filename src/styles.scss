@@ -2,9 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-// اختياري: إضافة خلفية غامقة للموقع كله عشان يليق بموقع أفلام
-body {
-  @apply bg-slate-950 text-white;
-  margin: 0;
-  font-family: 'Inter', sans-serif;
+:root {
+  --TMDB-bg: #1d1d1d; /* لون الخلفية الشهير في TMDB */
+  --TMDB-card-bg: #282828;
+  --TMDB-main: #3b82f6; /* الأخضر بتاعهم، أو خليه #3b82f6 لو حابب الأزرق */
 }
+
+body {
+  background-color: var(--TMDB-bg);
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar Style مثل المواقع الاحترافية */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1d1d1d; }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--TMDB-main); }
